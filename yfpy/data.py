@@ -10,7 +10,6 @@ from yfpy.utils import complex_json_handler, unpack_data
 
 logger = logging.getLogger(__name__)
 
-
 class Data(object):
 
     def __init__(self, data_dir, save_data=False, dev_offline=False):

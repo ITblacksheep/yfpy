@@ -16,5 +16,8 @@ dist/
 
 # Testing
 test/test_output/
-test/*private*.json
-test/*token*.json
+test/auth/
+venv/
+
+#vscode
+.vscode

@@ -6,7 +6,7 @@ import logging
 import os
 import sys
 import time
-
+import jmespath
 from requests.exceptions import HTTPError
 from yahoo_oauth import OAuth2
 
@@ -222,8 +222,11 @@ class YahooFantasySportsQuery(object):
                   ...
                 ]
         """
-        return sorted(self.query("https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=" + self.game_code,
-                                 ["games"]), key=lambda x: x.get("game").season)
+        response = self.get_response("https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=" + self.game_code)
+        games = jmespath.search('fantasy_content.games.*.game[]', response.json() )
+        games
+        #return sorted(self.query("https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=" + self.game_code,
+        #                         ["games"]), key=lambda x: x.get("game").season)
 
     def get_game_key_by_season(self, season):
         """Retrieve specific game key by season.
@@ -1610,10 +1613,11 @@ class YahooFantasySportsQuery(object):
 
         """
         team_key = self.get_league_key() + ".t." + str(team_id)
-        return self.query(
+        return_query =  self.query(
             "https://fantasysports.yahooapis.com/fantasy/v2/team/" + str(team_key) + "/roster;week=" +
             str(chosen_week) + "/players;out=metadata,stats,ownership,percent_owned,draft_analysis",
             ["team", "roster", "0", "players"])
+        return return_query
 
     def get_team_roster_player_info_by_date(self, team_id, chosen_date=None):
         """Retrieve roster with ALL player info of specific team by team_id and by date for chosen league.

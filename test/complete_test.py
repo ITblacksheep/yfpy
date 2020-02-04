@@ -1,6 +1,7 @@
 __author__ = "Wren J. R. (uberfastman)"
 __email__ = "wrenjr@yahoo.com"
 
+
 import logging
 import os
 import pprint
@@ -27,7 +28,7 @@ class QueryTestCase(TestCase):
         self.print_output = False
 
         # Put private.json (see README.md) in examples directory
-        auth_dir = "."
+        auth_dir = os.path.dirname(os.path.realpath(__file__)) + "\\auth"
 
         # Example code will output data here
         self.data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_output")
@@ -50,7 +51,7 @@ class QueryTestCase(TestCase):
         # example_public_league_url = "https://archive.fantasysports.yahoo.com/nfl/2014/729259"
 
         # Test vars
-        self.chosen_week = 1
+        self.chosen_week = 13
         self.chosen_date = "2013-04-15"  # NHL
         # self.chosen_date = "2013-04-16"  # NHL
         self.team_id = 1
