@@ -7,10 +7,12 @@ import os
 import sys
 import time
 import jmespath
+
 from requests.exceptions import HTTPError
 from yahoo_oauth import OAuth2
+from related import to_model
 
-from yfpy.models import YahooFantasyObject, Game, User, League, Standings, Settings, Player, StatCategories, \
+from yfpy.models import YahooFantasyObject, Game, Games, User, League, Standings, Settings, Player, StatCategories, \
     Scoreboard, Team, TeamPoints, TeamStandings, Roster
 from yfpy.utils import reformat_json_list, unpack_data, complex_json_handler
 
@@ -223,10 +225,7 @@ class YahooFantasySportsQuery(object):
                 ]
         """
         response = self.get_response("https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=" + self.game_code)
-        games = jmespath.search('fantasy_content.games.*.game[]', response.json() )
-        games
-        #return sorted(self.query("https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=" + self.game_code,
-        #                         ["games"]), key=lambda x: x.get("game").season)
+        return to_model(Games, jmespath.search('fantasy_content.games.*.game[]', response.json()))
 
     def get_game_key_by_season(self, season):
         """Retrieve specific game key by season.
@@ -237,10 +236,8 @@ class YahooFantasySportsQuery(object):
             Example:
                 "338"
         """
-        return self.query(
-            "https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=" + self.game_code + ";seasons=" +
-            str(season), ["games"]).get("game").game_key
-
+        response = self.get_response("https://fantasysports.yahooapis.com/fantasy/v2/games;game_codes=" + self.game_code + ";seasons=" + str(season))
+        return jmespath.search('fantasy_content.games.*.game[].game_id | [0]', response.json())
     def get_current_game_info(self):
         """Retrieve game info for current fantasy season.
 
@@ -302,6 +299,9 @@ class YahooFantasySportsQuery(object):
                   "url": "https://football.fantasysports.yahoo.com/f1"
                 }
         """
+        response = self.get_response("https://fantasysports.yahooapis.com/fantasy/v2/game/" + self.game_code +
+            ";out=metadata,players,game_weeks,stat_categories,position_types,roster_positions")
+        response
         return self.query(
             "https://fantasysports.yahooapis.com/fantasy/v2/game/" + self.game_code +
             ";out=metadata,players,game_weeks,stat_categories,position_types,roster_positions", ["game"], Game)

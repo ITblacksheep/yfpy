@@ -3,8 +3,9 @@ __email__ = "wrenjr@yahoo.com"
 
 import json
 import logging
-
 import stringcase
+import related
+from enum import Enum, unique
 
 from yfpy.utils import complex_json_handler
 # from yfpy.utils import flatten_to_objects
@@ -114,30 +115,45 @@ class User(YahooFantasyObject):
         self.games = self.extracted_data.get("games", [])
         self.guid = self.extracted_data.get("guid", "")
 
-
-class Game(YahooFantasyObject):
+@related.mutable
+class Game():
     """Yahoo fantasy object for "game" data key.
     """
-    def __init__(self, extracted_data):
-        YahooFantasyObject.__init__(self, extracted_data)
-        self.code = self.extracted_data.get("code", "")
-        self.game_id = self.extracted_data.get("game_id", "")
-        self.game_key = self.extracted_data.get("game_key", "")
-        self.game_weeks = self.extracted_data.get("game_weeks", "")
-        self.is_game_over = self.extracted_data.get("is_game_over", "")
-        self.is_live_draft_lobby_active = self.extracted_data.get("is_live_draft_lobby_active", "")
-        self.is_offseason = self.extracted_data.get("is_offseason", "")
-        self.is_registration_over = self.extracted_data.get("is_registration_over", "")
-        self.leagues = self.extracted_data.get("leagues", [])
-        self.name = self.extracted_data.get("name", "")
-        self.position_types = self.extracted_data.get("position_types", [])
-        self.roster_positions = self.extracted_data.get("roster_positions", [])
-        self.season = self.extracted_data.get("season", "")
-        self.stat_categories = self.extracted_data.get("stat_categories", StatCategories({}))  # type: StatCategories
-        self.teams = self.extracted_data.get("teams", [])
-        self.type = self.extracted_data.get("type", "")
-        self.url = self.extracted_data.get("url", "")
+    code = related.StringField()
+    game_id = related.IntegerField()
+    game_key = related.IntegerField()
+    name = related.StringField()
+    type = related.StringField()
+    url = related.URLField()
+    season = related.IntegerField()
+    is_registration_over = related.IntegerField()
+    is_game_over = related.IntegerField()
+    is_offseason = related.IntegerField()
 
+    # def __init__(self, extracted_data):
+    #     YahooFantasyObject.__init__(self, extracted_data)
+    #     self.code = self.extracted_data.get("code", "")
+    #     self.game_id = self.extracted_data.get("game_id", "")
+    #     self.game_key = self.extracted_data.get("game_key", "")
+    #     self.game_weeks = self.extracted_data.get("game_weeks", "")
+    #     self.is_game_over = self.extracted_data.get("is_game_over", "")
+    #     self.is_live_draft_lobby_active = self.extracted_data.get("is_live_draft_lobby_active", "")
+    #     self.is_offseason = self.extracted_data.get("is_offseason", "")
+    #     self.is_registration_over = self.extracted_data.get("is_registration_over", "")
+    #     self.leagues = self.extracted_data.get("leagues", [])
+    #     self.name = self.extracted_data.get("name", "")
+    #     self.position_types = self.extracted_data.get("position_types", [])
+    #     self.roster_positions = self.extracted_data.get("roster_positions", [])
+    #     self.season = self.extracted_data.get("season", "")
+    #     self.stat_categories = self.extracted_data.get("stat_categories", StatCategories({}))  # type: StatCategories
+    #     self.teams = self.extracted_data.get("teams", [])
+    #     self.type = self.extracted_data.get("type", "")
+    #     self.url = self.extracted_data.get("url", "")
+
+
+@related.mutable
+class Games():
+    games = related.SequenceField(Game)
 
 class GameWeek(YahooFantasyObject):
     """Yahoo fantasy object for "game_week" data key.

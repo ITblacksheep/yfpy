@@ -72,24 +72,6 @@ class QueryTestCase(TestCase):
     # ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ SAVING AND LOADING FANTASY FOOTBALL GAME DATA • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ •
     # ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ • ~ •
 
-    def test_get_all_yahoo_fantasy_game_keys(self):
-        """Retrieve all Yahoo fantasy football game keys.
-        """
-        query_result_data = self.yahoo_data.save(self.game_code + "-game_keys",
-                                                 self.yahoo_query.get_all_yahoo_fantasy_game_keys)
-        if self.print_output:
-            pprint.pprint(query_result_data)
-            print("-" * 100)
-            print()
-
-        loaded_result_data = self.yahoo_data.load(self.game_code + "-game_keys")
-        if self.print_output:
-            pprint.pprint(loaded_result_data)
-            print("-" * 100)
-            print()
-
-        self.assertEqual(query_result_data, loaded_result_data)
-
     def test_get_game_key_by_season(self):
         """Retrieve specific game key by season.
         """
