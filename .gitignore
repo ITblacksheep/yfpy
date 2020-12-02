@@ -19,3 +19,8 @@ test/test_output/
 private*.json
 token*.json
 .env
+
+# VSCode
+*.code-workspace
+.vscode
+pyvenv.cfg
